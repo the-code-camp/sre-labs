@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+
+  demo-service-1:
+    image: varoon10/prometheus-demo-service
+    ports:
+      - 8080:8080
+    networks: 
+      - metrics
+
+  demo-service-2:
+    image: varoon10/prometheus-demo-service
+    ports:
+      - 8081:8080
+    networks: 
+      - metrics
+
+  demo-service-3:
+    image: varoon10/prometheus-demo-service
+    ports:
+      - 8082:8080
+    networks: 
+      - metrics
+
+networks: 
+  fulfilment:
+  metrics:
+    name: metrics
