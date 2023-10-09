@@ -47,4 +47,8 @@ Finally, set the title of the new webhook to `"Alertmanager"` and set its defaul
 
 ![](/imgs/5.png)
 
-After clicking `"Save"`, Mattermost will show you the `URL of the newly created webhook` - Note down this URL, as we will use it in our `Alertmanager` configuration in the next step.
+After clicking `"Save"`, Mattermost will show you the `URL of the newly created webhook` - Note down this URL, as we will use it in our `Alertmanager` configuration in the next step. You need to update the URL from `localhost:8065` to `mattermost:8065`
+
+![](/imgs/mattermost/6.png)
+
+**Next** [Setting up the Alert manager](./alertmanager.md)

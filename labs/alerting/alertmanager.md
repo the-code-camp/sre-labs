@@ -1,28 +1,10 @@
 ## Setting up the Alertmanager
 
-Alertmanager does not come with Prometheus by default so we need to install it.
+Alertmanager does not come with Prometheus by default so we need to run it as another container.
 
-Let's download and run the Alertmanager with a configuration that sends all alerts to the `#alerts` channel in our Mattermost setup. We will use Alertmanager's Slack notification integration for this, as it is compatible with Mattermost's.
+Let's run the Alertmanager with a configuration that sends all alerts to the `#alerts` channel in our Mattermost setup. We will use Alertmanager's Slack notification integration for this, as it is compatible with Mattermost's.
 
-Run this command to download Alertmanager v0.24.0 for Linux (see [the download page](https://prometheus.io/download/#alertmanager) for other versions):
-
-```bash
-wget https://github.com/prometheus/alertmanager/releases/download/v0.24.0/alertmanager-0.24.0.linux-amd64.tar.gz
-```
-
-Then, extract the tarball.  You can run this from the Desktop folder:
-
-```bash
-tar xvfz alertmanager-0.24.0.linux-amd64.tar.gz
-```
-
-Then, change into the extracted directory:
-
-```bash
-cd alertmanager-0.24.0.linux-amd64
-```
-
-Create (or replace) the file `alertmanager.yml` with the following content. You will need to replace the <webhook URL> placeholder in the configuration below with the webhook URL that Mattermost gave you earlier and you should have noted down:
+Start with adding the following content in the file `./config/alertmanager.yml`. You will need to replace the `<WEBHOOK URL>` placeholder in the configuration below with the webhook URL that Mattermost gave you earlier and you should have noted down:
 
 ```yml
 route:
@@ -37,9 +19,8 @@ route:
 receivers:
 - name: slack
   slack_configs:
-  - api_url: '<webhook URL>' # <––– REPLACE THIS!
+  - api_url: '<WEBHOOK URL>' # REPLACE THIS!!
     channel: '#alerts'
-    # Also send notifications for resolved alerts.
     send_resolved: true
     # A message title that shows a summary of the alerts.
     title: |-
@@ -86,20 +67,18 @@ The configuration uses heavy templating in the title and text fields of the Slac
 Go ahead and run the Alertmanager:
 
 ```bash
-./alertmanager
+docker compose -f alertmanager.yml up -d
 ```
 
 The Alertmanager should start up and output some logs...
 
-By default, the Alertmanager will load its configuration file from the file `alertmanager.yml` in the current directory. If you need to override this, you can use the command-line flag `--config.file=<filename>`. It will also store its notification log and the currently configured silences in a `data/` subdirectory. You can override this using the `--storage.path` flag.
-
-The Alertmanager listens on port 9093 by default (this can be adjusted using the `--web.listen-address` flag). Head to http://localhost:9093/ to view its web-based user interface.
+The Alertmanager listens on port 9093 by default. Head to http://localhost:9093/ to view its web-based user interface.
 
 ## Pointing Prometheus to Alertmanager
 
 Next, we need to tell Prometheus where to find our Alertmanager, so it can send firing alerts to it.
 
-Add the following to the scrape_configs section in your `prometheus.yml` Prometheus configuration file (which should live at `/etc/prometheus/prometheus.yml`):
+Add the following next to the `scrape_configs` section in your `./config/prometheus.yml`:
 
 ```yaml
 alerting:
@@ -107,10 +86,37 @@ alerting:
   - static_configs:
     - targets: ['localhost:9093']
 ```
-Since we have edited the config file we need to restart the Prometheus server -  Reload the Prometheus configuration by sending a HUP signal to the Prometheus process:
+
+The full Prometheus configuration now looks like this:
+
+```yaml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - 'demo-alerts.yml'
+  
+scrape_configs:
+  - job_name: 'demo'
+    static_configs:
+      - targets:
+        - 'demo-service-1:8080'
+        - 'demo-service-2:8080'
+        - 'demo-service-3:8080'
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets: ['alertmanager:9093']
+```
+Since we have edited the config file we need to restart the Prometheus server -  Reload the Prometheus configuration:
 
 ```bash
-killall -HUP prometheus
+docker compose -f infra.yml restart prometheus
 ```
 
 Head to your Prometheus server's status page at http://localhost:9090/status and verify that the "Alertmanagers" heading lists the configured Alertmanager endpoint.
+
+
+**Next** [Viewing Alerts in Alertmanager](./viewing.md)
