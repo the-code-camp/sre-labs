@@ -10,3 +10,7 @@ services:
     - "dockerhost:127.0.0.1"
     networks:
       - metrics
+
+networks:
+  metrics:
+    name: metrics

@@ -166,3 +166,5 @@ Clicking on the name of an alerting rule will expand details for that rule. For 
 In this example, there are two pending and two firing alerts (only a subset is shown in the screenshot). You can see the full labels, annotations, the output series' sample values, and the alert state for each active alert in this table.
 
 While Prometheus already shows alert information on this page, it is not sending that information anywhere yet. In the next sections, we will learn about Alertmanager and how to connect Prometheus to it to send notifications for your alerts.
+
+**Next** [Setup Slack/Mattermost for alerts](./mattermost.md)
