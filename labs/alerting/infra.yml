@@ -3,14 +3,15 @@ version: '3.7'
 services:
 
   prometheus:
-    image: courselabs/prometheus:v2.28.1
+    image: prom/prometheus:v2.45.0
     ports: 
       - 9090:9090
     volumes:
       - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./config/demo-alerts.yml:/etc/prometheus/demo-alerts.yml
     networks:
       - metrics
-
+      
 networks:
   metrics:
     name: metrics

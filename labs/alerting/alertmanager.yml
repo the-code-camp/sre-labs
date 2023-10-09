@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+
+  alertmanager:
+    image: prom/alertmanager:v0.24.0
+    ports: 
+      - 9093:9093
+    volumes:
+      - ./config/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    networks:
+      - metrics
+
+networks:
+  metrics:
+    name: metrics
