@@ -84,7 +84,7 @@ Add the following next to the `scrape_configs` section in your `./config/prometh
 alerting:
   alertmanagers:
   - static_configs:
-    - targets: ['localhost:9093']
+    - targets: ['alertmanager:9093']
 ```
 
 The full Prometheus configuration now looks like this:
