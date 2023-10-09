@@ -25,6 +25,8 @@ This instructs Prometheus to scrape the three demo service targets every 15 seco
 After making changes to `./config/prometheus.yml`, start the Prometheus and Applications container:
 
 ```sh
+# move to the labs folder
+cd labs/alerting
 #start the apps and prometheus containers
 docker compose -f infra.yml -f apps.yml up -d
 ```
