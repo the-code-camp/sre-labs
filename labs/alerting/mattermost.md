@@ -29,9 +29,11 @@ First off, create an account in your local installation with the email `alertman
 
 Second, create an organization named `"Demo Organization"`
 
-Confirm your Mattermost server's URL. The default of http://localhost:8065 should already be correct here.
+Confirm your Mattermost server's URL. The default of http://mattermost:8065 should already be correct here.
 
 Skip the question about how you plan on using Mattermost...as well as the question about tools
+
+Create `#alerts` channel and skip the next question
 
 To add an incoming webhook for the `#alerts` channel that the Alertmanager can use to send notifications, open the main menu at the top left and select `"Integrations"`:
 
