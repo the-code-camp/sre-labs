@@ -192,9 +192,9 @@ Head to http://localhost:9090/alerts to view the "Alerts" page on your Prometheu
 
 ![](/imgs/1.png)
 
-Enable the "Show annotations" checkbox at the top right to include alert annotation details when expanding an alerting rule.
+Enable the `"Show annotations"` checkbox at the top right to include alert annotation details when expanding an alerting rule.
 
-Clicking on the name of an alerting rule will expand details for that rule. For example, click on the DemoServiceHighErrorRate rule to reveal its currently active alerts:
+Clicking on the name of an alerting rule will expand details for that rule. For example, click on the `DemoServiceHighErrorRate` rule to reveal its currently active alerts:
 
 ![](/imgs/2.png)
 
