@@ -33,7 +33,7 @@ Confirm your Mattermost server's URL. The default of http://mattermost:8065 shou
 
 Skip the question about how you plan on using Mattermost...as well as the question about tools
 
-Create `#alerts` channel and skip the next question
+Create `#alerts` channel and in the next screen where it asks to Invite your team members, do nothing and just click `Finish setup`.
 
 To add an incoming webhook for the `#alerts` channel that the Alertmanager can use to send notifications, open the main menu at the top left and select `"Integrations"`:
 
