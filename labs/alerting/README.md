@@ -188,7 +188,7 @@ docker compose -f infra.yml restart prometheus
 
 ## Inspecting Alerts in the UI
 
-Head to http://localhost:9090/alerts to view the "Alerts" page on your Prometheus server. It should show you an overview of your configured alerting rules, along with a background color indicating whether a rule currently has no active alerts (green), pending alerts (orange), or firing alerts (red).
+Head to http://localhost:9090/alerts to view the `"Alerts"` page on your Prometheus server. It should show you an overview of your configured alerting rules, along with a background color indicating whether a rule currently has no `active alerts (green), pending alerts (orange), or firing alerts (red)`.
 
 ![](/imgs/1.png)
 
@@ -198,8 +198,8 @@ Clicking on the name of an alerting rule will expand details for that rule. For 
 
 ![](/imgs/2.png)
 
-In this example, there are two pending and two firing alerts (only a subset is shown in the screenshot). You can see the full labels, annotations, the output series' sample values, and the alert state for each active alert in this table.
+In this example, there are `two pending` and `two firing alerts` (only a subset is shown in the screenshot). You can see the full labels, annotations, the output series' sample values, and the alert state for each active alert in this table.
 
-While Prometheus already shows alert information on this page, it is not sending that information anywhere yet. In the next sections, we will learn about Alertmanager and how to connect Prometheus to it to send notifications for your alerts.
+While Prometheus already shows alert information on this page, it is not sending that information anywhere yet. In the next sections, we will learn about `Alertmanager` and how to connect `Prometheus` to it to send notifications for your alerts.
 
 **Next** [Setup Slack/Mattermost for alerts](./mattermost.md)
