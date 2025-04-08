@@ -63,6 +63,13 @@ groups:
       description: 'Unable to scrape instance {{ $labels.instance }} of {{ $labels.job }}.'
 
   # Alert (as a critical alert) when no demo service instances at all can be scraped.
+  # Meaning
+    # - Sums all targets with job="demo" (ignoring instance labels).
+    # - Compares if the total is exactly 0, meaning all targets are down.
+  # Will match if:
+    # Targets exist but all of them are reporting 0 (i.e., down).
+    # Useful for alerting when a whole service is down, not just gone.
+
   - alert: DemoServiceAllInstancesDown
     expr: sum without(instance) (up{job="demo"}) == 0
     for: 30s
@@ -73,6 +80,12 @@ groups:
       description: 'Unable to scrape instance {{ $labels.instance }} of {{ $labels.job }}.'
 
   # Alert when no demo service instances are present.
+  # Returns 1 (with empty labels) only if there are no time series matching up{job="demo"} at all.
+  # Will NOT match if:
+   # - Targets exist but their value is 0 (i.e., down).
+   # - It only checks if the time series is completely missing.
+
+  #Example: If your job is removed from config or a target is deleted — then absent() kicks in.
   - alert: DemoServiceAbsent
     expr: absent(up{job="demo"})
     for: 1m
@@ -82,7 +95,9 @@ groups:
       title: '{{ $labels.job }} is absent'
       description: 'No instances of {{ $labels.job }} are being scraped.'
 
-  # Alert on path/method combinations with an error rate >0.5%.
+  # Alert on path/method combinations with an error rate >0.5%.\
+  # We calculate the per-second rate of requests in the past 1 minute. 
+  # (5xx_rate / total_rate) * 100
   - alert: DemoServiceHighErrorRate
     expr: |
       (
@@ -101,7 +116,25 @@ groups:
       title: 'High 5xx rate for {{ $labels.method }} on {{ $labels.path }}'
       description: 'The 5xx error rate for path {{$labels.path}} with method {{ $labels.method }} in {{ $labels.job }} is {{ printf "%.2f" $value }}%.'
 
-  # Alert on path/method combinations with a 99th percentile latency >200ms.
+  # Alert on path/method combinations with a 99th percentile latency > 200ms.
+  # Prometheus histogram-based latency SLO
+  # This checks if the 99th percentile latency for a given API is above a threshold.
+
+  # demo_api_request_duration_seconds_bucket
+  # This is a histogram metric from a Prometheus client library (e.g., in Go):
+  # It captures request durations in buckets.
+  # Example buckets might be: 0.1s, 0.2s, 0.5s, 1s, 2s, etc.
+  # It has cumulative counts:
+    # le="0.1" → requests ≤ 100ms
+    # le="1" → requests ≤ 1 second
+
+  # histogram_quantile(0.99, ...)
+    # Calculates the 99th percentile request latency (P99).
+    # This estimates the latency under which 99% of the requests fall.
+
+  # > 0.2
+    # Triggers if the 99th percentile latency > 0.2 seconds (200ms)
+    
   - alert: DemoServiceHighLatency
     expr: |
       histogram_quantile(
